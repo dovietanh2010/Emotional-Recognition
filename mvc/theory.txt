@@ -1,0 +1,43 @@
+Kết nối camera máy tính sử dụng Python:
+==========================
+### Tìm hiểu về các thư viện camera:
+- **OpenCV**: Là một thư viện mã nguồn mở mạnh mẽ và phổ biến, cung cấp các chức năng để xử lý hình ảnh và video
+- **PyCapture2**: Thư viện này được phát triển bởi FLIR Systems và hỗ trợ các camera Point Grey. Nó cung cấp các công cụ mạnh mẽ để làm việc với các camera chuyên nghiệp.
+- **imageio**: Thư viện này hỗ trợ đọc và ghi nhiều định dạng hình ảnh và video khác nhau, bao gồm cả việc truy cập camera máy tính.
+- **SimpleCV**: Đây là một thư viện mã nguồn mở dễ sử dụng để xử lý hình ảnh và video, dựa trên OpenCV.
+### Ưu nhược điểm của các thư viện camera:
+- **OpenCV**: 
+    + Ưu điểm: 
+        Mạnh mẽ và linh hoạt: Có thể xử lý đa dạng tác vụ về hình ảnh và video
+        Hỗ trợ rộng rãi: Nhiều tài liệu và có cộng đồng lớn
+        Hiệu suất cao: Được tối ưu hóa cho xử lý nhanh chóng
+    + Nhược điểm: 
+        Độ phức tạp: Khá khó cho người mới bắt đầu
+        Cài đặt: Một số hệ điều hành nhất định sẽ gặp khó khăn khi cài đặt thư viện này
+- **PyCapture2**:
+    + Ưu điểm: 
+        Chuyên dụng: Hỗ trợ tốt cho các camera Point Grey
+        Tính nắng phong phú: Cung cấp nhiều công cụ mạnh mẽ để làm việc với camera chuyên nghiệp
+    + Nhược điểm: 
+        Hạn chế về thiết bị: Chỉ hỗ trợ các camera của FLIR System
+        Tài liệu hạn chế: Không có nhiều tài liệu và cộng đồng hỗ trợ rộng rãi như OpenCV
+- **imageio**:
+    + Ưu điểm: 
+        Đa dạng: Hỗ trợ nhiều định dạng hình ảnh và video khác nhau
+        Dễ sử dụng: Thư viện thân thiện với người dùng, dễ tích hợp
+    + Nhược điểm: 
+        Hiệu suất: Không nhanh như OpenCV trong một số tác vụ xử lý ảnh phức tạp
+        Tính năng hạn chế: Không có nhiều tính năng mạnh mẽ để xử lý hình ảnh
+- **SimpleCV**:
+    + Ưu điểm: 
+        Dễ sử dụng: Thư viện dễ học và sử dụng, thích hợp cho người mới bắt đầu
+        Tích hợp với OpenCV: Dựa trên OpenCV, tận dụng được sức mạnh của OpenCV
+    + Nhược điểm: 
+        Tài liệu hạn chế: Không có nhiều tài liệu và cộng đồng hỗ trợ lớn
+        Ít cập nhật: Không được cập nhật thường xuyên như OpenCV
+
+=====================================================================
+Truy cập vào camera điện thoại:
+Nếu chạy demo trên 1 web, có thể sử dụng API getUserMedia của WebRTC để kết nối tới camera điện thoại.
+Sử dụng html và javascript, ta có thể kết nối và hiển thị hình ảnh của camera khi kết nối với điện thoại, nhưng yêu cầu website phải chạy trên 
+https, vì truy cập camera yêu cầu kết nối bảo mật
