@@ -12,6 +12,10 @@ from io import BytesIO
 from flask_socketio import SocketIO
 import os
 
+last_emotion_results = {}
+last_emotion = ""
+last_probs_percent = {}
+last_prediction = ""
 # Khởi tạo Flask
 app = Flask(__name__)
 CORS(app)
@@ -82,6 +86,7 @@ class ConvNet(nn.Module):
         x = self.block2(x)
         x = self.block3(x)
         x = self.block4(x)
+        
         x = x.view(x.size(0), -1)
 
         x = self.fc1(x)
@@ -115,6 +120,7 @@ emotion_labels = {0: 'angry', 1: 'fear', 2: 'happy', 3: 'neutral', 4: 'sad', 5: 
 
 @app.route("/predict", methods=["POST"])
 def predict():
+    global last_emotion_results, last_emotion, last_probs_percent, last_prediction
     try:
         data = request.get_json()
         if not data or "image" not in data:
@@ -122,6 +128,7 @@ def predict():
 
         # Giải mã ảnh từ Base64
         image_data = base64.b64decode(data["image"])
+        image_id = data["frameId"]
         image = Image.open(BytesIO(image_data)).convert("RGB")
         img_array = np.array(image)
 
@@ -138,19 +145,26 @@ def predict():
                 face_crop = img_array[y1:y2, x1:x2]
                 face_crop_pil = Image.fromarray(face_crop).convert("L")
                 face_tensor = transform(face_crop_pil).unsqueeze(0)
-
+                if image_id == 0:
                 # Dự đoán cảm xúc
-                with torch.no_grad():
-                    output = emotion_model(face_tensor)
-                    probabilities = torch.softmax(output, dim=1)[0]
-                    prediction = torch.argmax(probabilities).item()
-
-                probs_percent = {emotion_labels[i]: round(probabilities[i].item() * 100, 2) for i in range(6)}
+                    with torch.no_grad():
+                        output = emotion_model(face_tensor)
+                        probabilities = torch.softmax(output, dim=1)[0]
+                        prediction = torch.argmax(probabilities).item()
+                        
+                    probs_percent = {emotion_labels[i]: round(probabilities[i].item() * 100, 2) for i in range(6)}
+                    last_prediction = prediction
+                
+                
+                last_emotion = emotion_labels[last_prediction]
+                last_emotion_results = probs_percent[last_emotion]
+                last_probs_percent = probs_percent
+                
                 detected_face = {
-                    "emotion": emotion_labels[prediction],
-                    "probability": probs_percent[emotion_labels[prediction]],
+                    "emotion": last_emotion,
+                    "probability": last_emotion_results,
                     "bounding_box": {"x1": x1, "y1": y1, "x2": x2, "y2": y2},
-                    "all_probabilities": probs_percent,
+                    "all_probabilities": last_probs_percent,
                     "face_confidence": confidence
                 }
                 faces_detected.append(detected_face)

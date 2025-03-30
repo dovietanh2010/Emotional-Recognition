@@ -6,6 +6,7 @@ let button = document.getElementById(".corner-button");
 let mediaContainer = document.querySelector(".media-container");
 let streaming = false;
 let lastFaces = [];
+let frameId = -1;
 
 function startCamera() {
     navigator.mediaDevices.getUserMedia({ video: true })
@@ -40,11 +41,17 @@ toggleButton.addEventListener("click", () => {
 });
 
 async function processFrame() {
+    if (frameId === 3){
+        frameId = 0;
+    } else {
+        frameId++;
+    }
+    console.log("Frame ID:", frameId);
     if (!streaming) return;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     drawBoundingBoxes(lastFaces);
     let imageBase64 = canvas.toDataURL("image/jpeg").split(",")[1];
-    let jsonData = JSON.stringify({ "image": imageBase64 });
+    let jsonData = JSON.stringify({ "image": imageBase64, "frameId": frameId });
 
     try {
         let response = await fetch("http://127.0.0.1:5000/predict", {
