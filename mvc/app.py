@@ -10,6 +10,7 @@ from ultralytics import YOLO
 import base64
 from io import BytesIO
 from flask_socketio import SocketIO
+import os
 
 # Khởi tạo Flask
 app = Flask(__name__)
@@ -161,4 +162,5 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    PORT = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=PORT, debug=False)
